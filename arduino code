@@ -1,0 +1,39 @@
+#include <Wire.h>
+#include <Adafruit_MLX90614.h>
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(7,8,9,10,11,12);
+Adafruit_MLX90614 mlx = Adafruit_MLX90614();
+int sp = 6;
+void setup() {
+  mlx.begin();  
+  lcd.begin(16,2);
+  pinMode(sp,OUTPUT);
+}
+void loop() {
+  int x = mlx.readObjectTempC();
+  if(x>35){
+    print_lcd_alarm();
+    tone(sp,250);
+  }
+  else{
+    print_temp(x);
+    noTone(sp);
+  }
+  lcd.clear();
+}
+
+void print_lcd_alarm(){
+  lcd.setCursor(6,0);
+  lcd.print("alarm");
+  lcd.setCursor(6,1);
+  lcd.print("covid-19");
+}
+
+void print_temp(int x){
+  lcd.setCursor(0,0);
+  lcd.print("temp is :");
+  lcd.setCursor(10,0);
+  lcd.print(x);
+}
+
